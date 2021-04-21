@@ -1,4 +1,4 @@
-// Create a map object
+// Map object
 var myMap = L.map("mapid", {
     center: [32.7767, -96.7970],
     zoom: 2
@@ -14,7 +14,7 @@ L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
     accessToken: API_KEY
 }).addTo(myMap);
 
-// Store our API endpoint inside queryUrl
+// Store API inside queryUrl
 var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
 
 // Perform a GET request to the query URL
@@ -22,7 +22,7 @@ d3.json(queryUrl).then(function (data) {
     console.log("data");
     console.log(data);
 
-    // Once we get a response, send the data.features object to the createFeatures function
+    // Once the response is received, send the data.features object to the createFeatures function
     function createFeatures(features) {
         return {
             fillColor: chooseColor(features.geometry.coordinates[2]),
@@ -34,12 +34,12 @@ d3.json(queryUrl).then(function (data) {
             fillOpacity: 1
         };
 
-        // Setting the radius of magnitude
+        // Set the radius of magnitude
         function chosenRadius(magnitude) {
             return magnitude * 2;
         };
 
-        // Setting the color according to the number of depth reported
+        // Set the color according to the depth reported
         function chooseColor(depth) {
 
             if (depth > 90) {
@@ -58,15 +58,15 @@ d3.json(queryUrl).then(function (data) {
         };
     };
 
-    // Here we add a GeoJSON layer to the map once the file is loaded.
+    // Add a GeoJSON layer to the map once the file is loaded
     L.geoJson(data, {
-        // We turn each feature into a circleMarker on the map.
+        // Turn each feature into a circleMarker on the map
         pointToLayer: function (features, latlng) {
             return L.circleMarker(latlng);
         },
-        // We set the style for each circleMarker using our styleInfo function.
+        // Set the style for each circleMarker using the styleInfo function
         style: createFeatures,
-        // We create a popup for each marker to display the magnitude and location of the earthquake after the marker has been created and styled
+        // Create a popup for each marker to display the magnitude and location of the earthquake after the marker has been created and styled
         onEachFeature: function (features, layer) {
             layer.bindPopup(
                 "Magnitude: "
@@ -79,12 +79,12 @@ d3.json(queryUrl).then(function (data) {
         }
     }).addTo(myMap);
 
-    // Here we create a legend control object.
+    // Create a legend control object
     var legend = L.control({
         position: "bottomright"
     });
 
-    // Then add all the details for the legend
+    // Add all the details for the legend
     legend.onAdd = function () {
         var div = L.DomUtil.create("div", "info legend");
 
@@ -98,7 +98,7 @@ d3.json(queryUrl).then(function (data) {
             "#ea2c2c"
         ];
 
-        // Looping through our intervals to generate a label with a colored square for each interval.
+        // Loop through the intervals to generate a label with a colored square for each interval
         for (var i = 0; i < grades.length; i++) {
             div.innerHTML += "<i style='background: " + colors[i] + "'></i> "
                 + grades[i] + (grades[i + 1] ? "&ndash;" + grades[i + 1] + "<br>" : "+");
@@ -106,7 +106,7 @@ d3.json(queryUrl).then(function (data) {
         return div;
     };
 
-    // Finally, we our legend to the map.
+    // Add the legend to the map
     legend.addTo(myMap);
 
 });
