@@ -1,7 +1,7 @@
 // Create a map object
 var myMap = L.map("mapid", {
     center: [32.7767, -96.7970],
-    zoom: 5
+    zoom: 2
 });
 
 // Define greymap layers  
@@ -15,12 +15,12 @@ L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 }).addTo(myMap);
 
 // Store our API endpoint inside queryUrl
-var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_week.geojson";
+var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
 
 // Perform a GET request to the query URL
-d3.json(queryUrl, function (data) {
-    console.log("data")
-    console.log(data)
+d3.json(queryUrl).then(function (data) {
+    console.log("data");
+    console.log(data);
 
     // Once we get a response, send the data.features object to the createFeatures function
     function createFeatures(features) {
@@ -36,7 +36,7 @@ d3.json(queryUrl, function (data) {
 
         // Setting the radius of magnitude
         function chosenRadius(magnitude) {
-            return magnitude * 4;
+            return magnitude * 2;
         };
 
         // Setting the color according to the number of depth reported
